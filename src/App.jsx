@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import Jogo from './Jogo.jsx'
+import Modal from './Modal.jsx'
 import './App.css'
 
 function App() {
   const [quadrados, setQuadrados] = useState(Array(9).fill(null));
   const [turno, setTurno] = useState('X');
   const [vitoria, setVitoria] = useState(0);
+  const [showModal, setShowModal] = useState(false);
 
   const combosVitoria = [
     [0,1,2],
@@ -30,13 +32,17 @@ function App() {
       const terceiro = novoVetor[combo[2]]
       if (primeiro !== null && primeiro == segundo && segundo == terceiro) {
         setVitoria(1)
-        console.log(`${turno} venceu!! :)`)
+        setShowModal(true)
       }
     });
+    console.log(showModal)
   };
   return (
     <div>
       <Jogo quadrados={quadrados} clique={handleJogar}/>
+      <Modal mostrar={showModal}>
+          <p>Modal</p>
+      </Modal>
     </div>
   )
 }
