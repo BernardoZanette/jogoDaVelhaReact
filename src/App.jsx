@@ -26,6 +26,7 @@ function App() {
     novoVetor[index] = turno;
     setQuadrados(novoVetor);
     setTurno(turno === "X" ? "O" : "X");
+    // verificar vitória
     combosVitoria.forEach(combo => {
       const primeiro = novoVetor[combo[0]] 
       const segundo = novoVetor[combo[1]] 
