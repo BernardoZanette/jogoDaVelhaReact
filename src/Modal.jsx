@@ -2,15 +2,16 @@ import './Modal.css';
 import ModalBoot from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 
-const Modal = ({mostrar, vencedor}) => {
+const Modal = ({mostrar, vencedor, onJogarNovamente}) => {
     const mostrarModal = mostrar ? "modal display-block" : "modal display-none";
+
     return (
-    <div className={mostrarModal} >
+    <div className={mostrarModal}>
         <ModalBoot.Header closeButton>
           <ModalBoot.Title>{vencedor} venceu!!</ModalBoot.Title>
         </ModalBoot.Header>
         <ModalBoot.Footer>
-          <Button>
+          <Button onClick={onJogarNovamente}>
             Jogar Novamente
           </Button>
         </ModalBoot.Footer>

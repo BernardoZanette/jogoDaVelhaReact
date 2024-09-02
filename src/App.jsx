@@ -8,10 +8,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 function App() {
   const [quadrados, setQuadrados] = useState(Array(9).fill(null));
   const [turno, setTurno] = useState('X');
-  const [vitoria, setVitoria] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [vitoriasX, setVitoriasX] = useState(0);
   const [vitoriasO, setVitoriasO] = useState(0);
+  let ganhou = false
 
   const combosVitoria = [
     [0,1,2],
@@ -25,11 +25,17 @@ function App() {
   ]
 
   const handleJogar = (index) => {
-    if (quadrados[index] !== null) return;
-    const novoVetor = [...quadrados];
-    novoVetor[index] = turno;
-    setQuadrados(novoVetor);
-    // verificar vitória
+    if (quadrados[index] !== null) return
+    const novoVetor = [...quadrados]
+    novoVetor[index] = turno
+    setQuadrados(novoVetor)
+
+    verificarVitoria(novoVetor);
+
+    botJogar(novoVetor);
+  };
+
+  const verificarVitoria = (novoVetor) => {
     combosVitoria.forEach(combo => {
       const primeiro = novoVetor[combo[0]] 
       const segundo = novoVetor[combo[1]] 
@@ -37,16 +43,33 @@ function App() {
       if (primeiro !== null && primeiro == segundo && segundo == terceiro) {
         turno == "X" ? setVitoriasX(vitoriasX+1) : setVitoriasO(vitoriasO+1) 
         setShowModal(true)
-        setVitoria(true)
+        ganhou = true;
       }
     });
-    if(!vitoria) setTurno(turno === "X" ? "O" : "X");
+  }
+
+  const botJogar = (quadradosPosJogada) => {
+    let indexesVazios = [];
+    quadradosPosJogada.forEach((quadrado, index) => {
+        if (quadrado == null) indexesVazios.push(index);
+    });
+    let jogadaIndex = Math.floor(Math.random()*indexesVazios.length);
+    quadradosPosJogada[jogadaIndex] = "O";
+    setQuadrados(quadradosPosJogada)
+    if(!ganhou) setTurno(turno === "X" ? "O" : "X");
+  }
+
+  const handleJogarNovamente = () => {
+    setQuadrados(Array(9).fill(null));
+    setTurno('X');
+    setShowModal(false);
   };
+
   return (
     <div>
       <Placar vitoriasO={vitoriasO} vitoriasX={vitoriasX}/>
       <Jogo quadrados={quadrados} clique={handleJogar}/>
-      <Modal mostrar={showModal} vencedor={turno}/>
+      <Modal mostrar={showModal} vencedor={turno} onJogarNovamente={handleJogarNovamente}/>
     </div>
   )
 }
