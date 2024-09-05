@@ -11,6 +11,8 @@ function App() {
   const [showModal, setShowModal] = useState(false);
   const [vitoriasX, setVitoriasX] = useState(0);
   const [vitoriasO, setVitoriasO] = useState(0);
+  const [modalFechado, setModalFechado] = useState(false);
+
   let ganhou = false
 
   const combosVitoria = [
@@ -41,27 +43,31 @@ function App() {
       const segundo = novoVetor[combo[1]] 
       const terceiro = novoVetor[combo[2]]
       if (primeiro !== null && primeiro == segundo && segundo == terceiro) {
-        turno == "X" ? setVitoriasX(vitoriasX+1) : setVitoriasO(vitoriasO+1) 
-        setShowModal(true)
+        primeiro == "X" ? setVitoriasX(vitoriasX+1) : setVitoriasO(vitoriasO+1);
+        primeiro == "X" ? setTurno("X") : setTurno("O"); 
+        setShowModal(true);
         ganhou = true;
       }
     });
   }
 
   const botJogar = (quadradosPosJogada) => {
+    if (ganhou) return;
     let indexesVazios = [];
     quadradosPosJogada.forEach((quadrado, index) => {
         if (quadrado == null) indexesVazios.push(index);
     });
-    let jogadaIndex = Math.floor(Math.random()*indexesVazios.length);
+    let indexAleatorio = Math.floor(Math.random()*indexesVazios.length);
+    let jogadaIndex = indexesVazios[indexAleatorio];
     quadradosPosJogada[jogadaIndex] = "O";
     setQuadrados(quadradosPosJogada)
-    if(!ganhou) setTurno(turno === "X" ? "O" : "X");
+    verificarVitoria(quadradosPosJogada)
   }
 
   const handleJogarNovamente = () => {
     setQuadrados(Array(9).fill(null));
     setTurno('X');
+    setModalFechado(false);
     setShowModal(false);
   };
 
@@ -69,7 +75,7 @@ function App() {
     <div>
       <Placar vitoriasO={vitoriasO} vitoriasX={vitoriasX}/>
       <Jogo quadrados={quadrados} clique={handleJogar}/>
-      <Modal mostrar={showModal} vencedor={turno} onJogarNovamente={handleJogarNovamente}/>
+        <Modal mostrar={showModal} vencedor={turno} onJogarNovamente={handleJogarNovamente} modalFechado={modalFechado} setModalFechado = {setModalFechado}/>
     </div>
   )
 }
