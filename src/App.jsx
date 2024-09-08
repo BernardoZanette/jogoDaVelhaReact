@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Jogo from './Jogo.jsx'
 import Modal from './Modal.jsx'
 import Placar from './Placar.jsx'
@@ -30,15 +30,26 @@ function App() {
     [6,7,8]
   ]
 
+  useEffect(() => {
+    // Verifica se há dados no localStorage e os usa para definir os quadrados
+    const jogo = localStorage.getItem('jogo');
+    if (jogo) {
+      setQuadrados(JSON.parse(jogo));
+    }
+  }, []); 
+
   const handleJogar = (index) => {
     if (quadrados[index] !== null) return
+
     const novoVetor = [...quadrados]
     novoVetor[index] = turno
     setQuadrados(novoVetor)
     setJogadasJogador(jogadasJogador+1);
     
     botJogar(novoVetor);  
-    
+    console.log(novoVetor);
+
+    localStorage.setItem('jogo', JSON.stringify(novoVetor));
     verificarVitoria(novoVetor);
   };
 
@@ -77,6 +88,7 @@ function App() {
   }
 
   const resetarPlacar = () => {
+    localStorage.clear();
     setEmpates(0);
     setVitoriasO(0);
     setVitoriasX(0);
