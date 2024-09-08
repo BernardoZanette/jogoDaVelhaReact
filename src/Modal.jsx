@@ -26,6 +26,6 @@ const Modal = ({mostrar, empatou, vencedor, onJogarNovamente, modalFechado, setM
          </div>
         );
     }
-    return  <Button id="jogarNovamente" onClick={onJogarNovamente}> Jogar Novamente </Button>;
+    return;
 };
 export default Modal;

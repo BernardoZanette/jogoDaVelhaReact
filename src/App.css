@@ -13,6 +13,12 @@ body {
   margin-top: 15px !important;
 }
 
-#resetarPlacar {
+.divBotoes {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.divBotoes>* {
   font-size: 20px !important;
+  width: 200px;
 }
