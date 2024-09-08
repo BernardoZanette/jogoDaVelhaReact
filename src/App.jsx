@@ -2,6 +2,7 @@ import { useState } from 'react'
 import Jogo from './Jogo.jsx'
 import Modal from './Modal.jsx'
 import Placar from './Placar.jsx'
+import Button from 'react-bootstrap/Button';
 import './App.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -11,7 +12,10 @@ function App() {
   const [showModal, setShowModal] = useState(false);
   const [vitoriasX, setVitoriasX] = useState(0);
   const [vitoriasO, setVitoriasO] = useState(0);
+  const [empates, setEmpates] = useState(0);
+  const [jogadasJogador, setJogadasJogador] = useState(0);
   const [modalFechado, setModalFechado] = useState(false);
+  const [empatou, setEmpatou] = useState(false);
 
   let ganhou = false
 
@@ -31,17 +35,18 @@ function App() {
     const novoVetor = [...quadrados]
     novoVetor[index] = turno
     setQuadrados(novoVetor)
-
+    setJogadasJogador(jogadasJogador+1);
+    
+    botJogar(novoVetor);  
+    
     verificarVitoria(novoVetor);
-
-    botJogar(novoVetor);
   };
 
   const verificarVitoria = (novoVetor) => {
     combosVitoria.forEach(combo => {
-      const primeiro = novoVetor[combo[0]] 
-      const segundo = novoVetor[combo[1]] 
-      const terceiro = novoVetor[combo[2]]
+      const primeiro = novoVetor[combo[0]];
+      const segundo = novoVetor[combo[1]];
+      const terceiro = novoVetor[combo[2]];
       if (primeiro !== null && primeiro == segundo && segundo == terceiro) {
         primeiro == "X" ? setVitoriasX(vitoriasX+1) : setVitoriasO(vitoriasO+1);
         primeiro == "X" ? setTurno("X") : setTurno("O"); 
@@ -49,6 +54,12 @@ function App() {
         ganhou = true;
       }
     });
+    if(jogadasJogador == 4 && !ganhou) {
+      setEmpates(empates+1);
+      setEmpatou(true);
+      setShowModal(true);
+    }
+    console.log(jogadasJogador)
   }
 
   const botJogar = (quadradosPosJogada) => {
@@ -61,21 +72,32 @@ function App() {
     let jogadaIndex = indexesVazios[indexAleatorio];
     quadradosPosJogada[jogadaIndex] = "O";
     setQuadrados(quadradosPosJogada)
+
     verificarVitoria(quadradosPosJogada)
+  }
+
+  const resetarPlacar = () => {
+    setEmpates(0);
+    setVitoriasO(0);
+    setVitoriasX(0);
+    handleJogarNovamente();
   }
 
   const handleJogarNovamente = () => {
     setQuadrados(Array(9).fill(null));
     setTurno('X');
+    setEmpatou(false);
+    setJogadasJogador(0);
     setModalFechado(false);
     setShowModal(false);
   };
 
   return (
     <div>
-      <Placar vitoriasO={vitoriasO} vitoriasX={vitoriasX}/>
+      <Placar vitoriasO={vitoriasO} vitoriasX={vitoriasX} empates={empates}/>
+      <Button id="resetarPlacar" onClick={resetarPlacar}>Resetar Placar</Button>;
       <Jogo quadrados={quadrados} clique={handleJogar}/>
-        <Modal mostrar={showModal} vencedor={turno} onJogarNovamente={handleJogarNovamente} modalFechado={modalFechado} setModalFechado = {setModalFechado}/>
+      <Modal mostrar={showModal} empatou={empatou} vencedor={turno} onJogarNovamente={handleJogarNovamente} modalFechado={modalFechado} setModalFechado={setModalFechado}/>
     </div>
   )
 }

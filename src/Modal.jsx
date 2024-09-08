@@ -2,7 +2,7 @@ import './Modal.css';
 import ModalBoot from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 
-const Modal = ({mostrar, vencedor, onJogarNovamente, modalFechado, setModalFechado}) => {
+const Modal = ({mostrar, empatou, vencedor, onJogarNovamente, modalFechado, setModalFechado}) => {
     const mostrarModal = mostrar ? "modal display-block" : "modal display-none";
 
     const fechar = () => {
@@ -13,7 +13,10 @@ const Modal = ({mostrar, vencedor, onJogarNovamente, modalFechado, setModalFecha
       return (
         <div className={mostrarModal} >
             <ModalBoot.Header closeButton onClick={fechar}>
-              <ModalBoot.Title>{vencedor} venceu!!</ModalBoot.Title>
+            {empatou 
+              ? <ModalBoot.Title>Empate!!</ModalBoot.Title>
+              : <ModalBoot.Title>{vencedor} venceu!!</ModalBoot.Title>
+            } 
             </ModalBoot.Header>
             <ModalBoot.Footer>
               <Button onClick={onJogarNovamente}>
