@@ -12,3 +12,7 @@
 #dificuldade option {
     color: black !important;
 }
+
+#dificuldade:disabled {
+    border: solid 1px red;
+}

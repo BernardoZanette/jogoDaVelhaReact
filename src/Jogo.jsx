@@ -3,6 +3,7 @@ import Quadrado from './Quadrado.jsx'
 
 const Jogo = ({quadrados, clique}) => {
 
+  // container com todos os quadrados com função de clique para determinar valor no vetor quadrados.
   return (
     <div id='container'>
       <Quadrado valor={quadrados[0]} onClick={() => clique(0)}/>

@@ -55,10 +55,11 @@ function App() {
 
   const handleJogar = (index) => {
     if (quadrados[index] !== null) return
-
+    // Atualiza o vetor dos quadrados.
     const novoVetor = [...quadrados]
     novoVetor[index] = turno
     setQuadrados(novoVetor)
+    // jogada
     setJogadasJogador(jogadasJogador+1);
 
     verificarVitoria(novoVetor);
@@ -71,7 +72,8 @@ function App() {
     localStorage.setItem('vitoriasO', vitoriasO);
     localStorage.setItem('empates', empates);
     localStorage.setItem('dificuldade', dificuldade);
-    localStorage.setItem('jogadas', jogadasJogador);
+    // como fica 0 depois da primeira jogada, soma +1 para, depois da primeira jogada, ficar 1 no localstorage.
+    localStorage.setItem('jogadas', jogadasJogador+1);
   };
 
   const verificarVitoria = (novoVetor) => {
@@ -79,6 +81,7 @@ function App() {
       const primeiro = novoVetor[combo[0]];
       const segundo = novoVetor[combo[1]];
       const terceiro = novoVetor[combo[2]];
+      // vetrifica pelos combos se a vitória foi dada.
       if (primeiro !== null && primeiro == segundo && segundo == terceiro) {
         primeiro == "X" ? setVitoriasX(vitoriasX+1) : setVitoriasO(vitoriasO+1);
         primeiro == "X" ? setTurno("X") : setTurno("O"); 
@@ -86,7 +89,8 @@ function App() {
         ganhou = true;
       }
     });
-    if(jogadasJogador == 4 && !ganhou) {
+    const empateVetor = novoVetor.filter(a => a !== null);
+    if(empateVetor.length == 9 && !ganhou) {
       setEmpates(empates+1);
       setEmpatou(true);
       setShowModal(true);
@@ -102,9 +106,11 @@ function App() {
 
       if (
         (!primeiro || !segundo || !terceiro) &&
-        ((primeiro == verificador && primeiro == segundo) ||
-        (segundo == verificador && segundo == terceiro) || 
-        (primeiro == verificador && primeiro == terceiro))
+        (
+          (primeiro == verificador && primeiro == segundo) ||
+          (segundo == verificador && segundo == terceiro) || 
+          (primeiro == verificador && primeiro == terceiro)
+        )
       ) {
           if (primeiro == verificador && primeiro == segundo) indexJogada = combo[2];
           if (segundo == verificador && segundo == terceiro) indexJogada = combo[0];
@@ -136,11 +142,11 @@ function App() {
       quadradosPosJogada[jogada] = "O";
     }
     else {
-      // X pode ganhar? Então impede.
-      jogou = impedirOuGanhar("X", quadradosPosJogada, indexJogada)
+      // O pode ganhar? Então ganha
+      jogou = impedirOuGanhar("O", quadradosPosJogada, indexJogada)
 
-      // Não tem o que impedir, então: O pode ganhar? Então ganha.
-      if (!jogou) jogou = impedirOuGanhar("O", quadradosPosJogada, indexJogada)
+      // X vai ganhar? impede
+      if (!jogou) jogou = impedirOuGanhar("X", quadradosPosJogada, indexJogada)
 
       // Não consegue ganhar, então joga aleatório. 
       if(!jogou) {
@@ -185,7 +191,7 @@ function App() {
       </div>
       <Jogo quadrados={quadrados} clique={handleJogar}/>
       <Modal mostrar={showModal} empatou={empatou} vencedor={turno} onJogarNovamente={handleJogarNovamente} modalFechado={modalFechado} setModalFechado={setModalFechado}/>
-      <Dificuldade dificuldade={dificuldade} setDificuldade={setDificuldade}/>
+      <Dificuldade dificuldade={dificuldade} setDificuldade={setDificuldade} jogadas={jogadasJogador}/>
     </div>
   )
 }
